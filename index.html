@@ -10,6 +10,19 @@
     <title>BMI Calculator</title>
 </head>
 <body>
+    <!-- Background moving balls (decorative) -->
+    <div class="bg-balls" aria-hidden="true">
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+        <span class="ball"></span>
+    </div>
     <!-- NaBar -->
     <nav class="navbar">
         <div class="container">
@@ -33,34 +46,134 @@
             <h2>BMI Calculator</h2>
             <form id="bmi-form">
                 <label for="weight">Weight (kg):</label>
-                <input type="number" id="weight" placeholder="Enter your weight(in Kg's)" min="0" required>
+                <input type="text" id="weight" placeholder="Enter your weight(in Kg's)" min="0" required>
                 
                 <label for="height">Height (cm):</label>
-                <input type="number" id="height" placeholder="Enter your height(in m's)" min="0" required>
+                <input type="text" id="height" placeholder="Enter your height(in m's)" min="0" required>
 
-                <button type="submit">Calculate BMI</button>
+                <button type="submit" id="calculate-btn">Calculate BMI</button>
             </form>
             <div id="bmi-value-indicator" class="bmi-indicator">
                 <span class="outerbar">
                     <span class="innerbar">
                         <span class="arrow-indicator"></span>
                     </span>
+                    <div class="ticks">
+                        <span class="tick-label" data-bmi="0">0</span>
+                        <span class="tick-label" data-bmi="18.5">18.5</span>
+                        <span class="tick-label" data-bmi="24.9">24.9</span>
+                        <span class="tick-label" data-bmi="29.9">29.9</span>
+                        <span class="tick-label" data-bmi="40">40</span>
+                    </div>
+                    <div class="bmi-pointer" id="bmi-pointer"><span id="bmi-pointer-value">--</span></div>
                 </span>
+                <div class="bmi-result">
+                    <h3>Your BMI: <span id="bmi-value">--</span></h3>
+                    <p id="bmi-category">Category: --</p>
+                </div>
             </div>
-            <div class="bmi-result">
-                <h3>Your BMI: <span id="bmi-value">--</span></h3>
-                <p id="bmi-category">Category: --</p>
+            
+        </section>
+
+        <section id="guidance" class="section">
+            <h2>BMI Guidance</h2>
+            <p class="guidance-note">Select a BMI to see tailored primary goals and key tips. The card matching your calculated BMI will be highlighted.</p>
+            <div class="guidance-grid">
+                <div class="guidance-card" data-category="Underweight">
+                    <h4>Underweight</h4>
+                    <p class="range"><strong>Range:</strong> &lt; 18.5</p>
+                    <p class="goal"><strong>Primary Goal:</strong> Healthy Weight Gain</p>
+                    <ul>
+                        <li>Eat 5–6 smaller, nutrient-dense meals daily.</li>
+                        <li>Add healthy calories via nuts, seeds, avocados, and full-fat dairy.</li>
+                        <li>Focus on strength training to build muscle mass rather than just fat.</li>
+                    </ul>
+                </div>
+                <div class="guidance-card" data-category="Healthy Weight">
+                    <h4>Healthy Weight</h4>
+                    <p class="range"><strong>Range:</strong> 18.5 – 24.9</p>
+                    <p class="goal"><strong>Primary Goal:</strong> Maintenance</p>
+                    <ul>
+                        <li>Balance calorie intake with energy expenditure.</li>
+                        <li>Maintain a varied, plant-forward diet rich in antioxidants.</li>
+                        <li>Prioritize consistency in existing sleep and exercise routines.</li>
+                    </ul>
+                </div>
+                <div class="guidance-card" data-category="Overweight">
+                    <h4>Overweight</h4>
+                    <p class="range"><strong>Range:</strong> 25.0 – 29.9</p>
+                    <p class="goal"><strong>Primary Goal:</strong> Weight Management</p>
+                    <ul>
+                        <li>Aim for a modest, sustainable weight loss of 0.5–1kg per week.</li>
+                        <li>Swap sugary drinks for water or unsweetened tea.</li>
+                        <li>Track food intake for a few days to identify hidden liquid calories or oversized portions.</li>
+                    </ul>
+                </div>
+                <div class="guidance-card" data-category="Obese">
+                    <h4>Obese (Class I–III)</h4>
+                    <p class="range"><strong>Range:</strong> ≥ 30.0</p>
+                    <p class="goal"><strong>Primary Goal:</strong> Risk Reduction</p>
+                    <ul>
+                        <li>Seek professional medical guidance for a supervised weight management plan.</li>
+                        <li>Target a initial 5–10% weight reduction to significantly lower disease risk.</li>
+                        <li>Increase activity gradually, starting with low-impact options like brisk walking or water aerobics.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
         <section id="tips" class="section">
             <h2>Health Tips</h2>
-            <ul>
-                <li>Maintain a balanced diet.</li>
-                <li>Exercise regularly.</li>
-                <li>Stay hydrated.</li>
-                <li>Get enough sleep.</li>
-            </ul>
+            <div class="health-tips">
+                <article class="tip-card nutrition">
+                    <h3>Nutrition</h3>
+                    <ul class="health-list">
+                        <li>Prioritize whole foods (fruits, vegetables, lean proteins, healthy fats).</li>
+                        <li>Reduce ultra-processed foods.</li>
+                        <li>Focus on adding nutrients (like fiber and protein) rather than only restricting calories.</li>
+                    </ul>
+                </article>
+
+                <article class="tip-card hydration">
+                    <h3>Hydration</h3>
+                    <ul class="health-list">
+                        <li>Drink 8–10 glasses of water daily.</li>
+                        <li>Have a large glass of water before your morning coffee to kickstart metabolism.</li>
+                    </ul>
+                </article>
+
+                <article class="tip-card activity">
+                    <h3>Physical Activity</h3>
+                    <ul class="health-list">
+                        <li>Aim for 150–300 minutes of moderate aerobic activity weekly.</li>
+                        <li>Incorporate "movement snacks"—short bursts of activity like taking the stairs or stretching every hour.</li>
+                    </ul>
+                </article>
+
+                <article class="tip-card sleep">
+                    <h3>Sleep</h3>
+                    <ul class="health-list">
+                        <li>Secure 7–9 hours of quality sleep per night.</li>
+                        <li>Establish a "digital sunset"—avoid screens at least one hour before bed to regulate melatonin.</li>
+                    </ul>
+                </article>
+
+                <article class="tip-card mental">
+                    <h3>Mental Health</h3>
+                    <ul class="health-list">
+                        <li>Practice daily mindfulness or gratitude exercises.</li>
+                        <li>Use "mental anchors" like a quiet morning tea or a short walk to ground yourself during stressful days.</li>
+                    </ul>
+                </article>
+
+                <article class="tip-card preventive">
+                    <h3>Preventive Care</h3>
+                    <ul class="health-list">
+                        <li>Schedule annual check-ups.</li>
+                        <li>Stay up to date with age-appropriate cancer screenings and vaccinations.</li>
+                    </ul>
+                </article>
+            </div>
         </section>
     </main>
 
@@ -69,5 +182,8 @@
         <div class="container">
             <p>&copy; 2024 BMI Calculator. All rights reserved.</p>
         </div>
+
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>

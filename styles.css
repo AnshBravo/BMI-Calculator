@@ -20,12 +20,12 @@
 	/* BMI color scale (low risk → high risk): green → red
     Categories follow common modern guidance for visual indication:
     underweight, normal, overweight, obese I, obese II, obese III */
-	--bmi-underweight: #17a589; /* teal */
-	--bmi-normal: #2ecc71; /* green */
-	--bmi-overweight: #f1c40f; /* amber */
-	--bmi-obese-i: #e67e22; /* orange */
-	--bmi-obese-ii: #e74c3c; /* red-orange */
-	--bmi-obese-iii: #c0392b; /* dark red */
+	--bmi-underweight: #3498DB; /* teal */
+	--bmi-normal: #2ECC71; /* green */
+	--bmi-overweight: #F1C40F; /* amber */
+	--bmi-obese-i: #E67E22; /* orange */
+	--bmi-obese-ii: #E74C3C; /* red-orange */
+	--bmi-obese-iii: #C0392B; /* dark red */
     
 	/* Semantic tokens */
 	--bmi-gradient: linear-gradient(90deg, var(--bmi-normal), var(--bmi-overweight), var(--bmi-obese-i));
@@ -149,12 +149,13 @@ a{
 }
 
 #calculator{
-    width:75%;
+    width:70%;
+    max-width: 450px;
     margin:auto auto;
 }
 
 #calculator h2{
-    width:45%;
+    width:230px;
     padding-left:10px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -175,12 +176,46 @@ a{
      border-top-left-radius:0px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding-top:3rem;
+    position:relative;
+    margin-bottom: 100px;
 }
+
+#bmi-form::before{
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(125%) translateY(20%);
+    width: 100px;
+    height: 100px;
+    background-color: whitesmoke;
+    border-bottom-left-radius: 200px;
+    border-top-right-radius: 12px;
+    box-shadow: -2px 2px 4px rgba(0,0,0,0.4);
+}
+
+#bmi-form::after{
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 27%;
+    transform: translateX(-121.5%) translateY(-20%);
+    width: 100px;
+    height: 100px;
+    background-color: whitesmoke;
+    border-top-right-radius: 200px;
+    border-bottom-left-radius: 12px;
+    box-shadow: 2px -2px 4px rgba(0,0,0,0.4);
+    background-color: whitesmoke;
+    
+}
+
+
 
 #bmi-form label{
     font-weight:600;
     margin: auto 0;
-    margin-left: 90px;
+    margin-left: 78px;
     margin-bottom: -15px;
     color:whitesmoke
     
@@ -223,5 +258,313 @@ a{
     box-shadow: none;
     transform: translateY(1px);
 }
+
+
+/* Value Indicator */
+
+.bmi-indicator{
+    display: none;
+    text-align: center;
+    width:400px;
+    height: 350px;
+    margin: 50px auto;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;;
+    margin-top: 1rem;
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: whitesmoke;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.outerbar{
+    display: inline-block;
+    width:300px;
+    height: 150px;
+    margin: 20px auto;
+    border: 2px solid var(--text-color);
+    border-top-left-radius: 250px;
+    border-top-right-radius: 250px;
+background: linear-gradient(90deg, 
+  #3498DB 0%,    /* Underweight */
+  #2ECC71 30%,   /* Normal/Healthy */
+  #F1C40F 50%,   /* Overweight */
+  #E67E22 60%,   /* Obese Class I */
+  #E74C3C 80%,   /* Obese Class II */
+  #C0392B 100%   /* Obese Class III (Severe) */
+);    position: relative;
+}
+
+/* Tick labels positioned along the outer bar */
+.ticks{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -34px;
+    height: 24px;
+    pointer-events: none;
+}
+.tick-label{
+    position: absolute;
+    bottom: 0;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: transparent;
+}
+
+/* Moving pointer that follows the arrow — shows BMI value above the bar */
+.bmi-pointer{
+    position: absolute;
+    bottom: -50px;
+    left: 0%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    text-align: center;
+    font-weight: 700;
+    color: var(--text-color);
+}
+.bmi-pointer span{
+    display: inline-block;
+    background: whitesmoke;
+    padding: 4px 8px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    font-size: 0.95rem;
+}
+.bmi-pointer::after{
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    margin: 6px auto 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid whitesmoke;
+}
+
+/*
+Background moving balls — Rules:
+- Count: 10 `.ball` elements inside `.bg-balls`.
+- Placement: absolutely positioned within the viewport; initial positions set via `left`/`top` (per-nth-child).
+- Sizes: varied per ball (range ~20px–140px) so depth is implied.
+- Colors: use semi-transparent fills (use theme variables) so they don't compete with content.
+- Movement: slow, subtle floating using `transform: translate3d(...)` and slight rotation.
+- Duration: long durations (20s–80s) to keep motion slow and non-distracting.
+- Delay / Phase: staggered `animation-delay` so balls do not move in unison.
+- Interaction: `pointer-events: none` so background doesn't capture clicks; `aria-hidden="true"` on container.
+- Performance: use `will-change: transform` and hardware-accelerated transforms.
+*/
+
+.bg-balls{
+    position: fixed;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    overflow: hidden;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-balls .ball{
+    position: absolute;
+    border-radius: 50%;
+    /* slightly increased opacity so balls are more visible but subtle */
+    opacity: 0.18;
+    will-change: transform, opacity;
+    transform: translate3d(0,0,0);
+    animation-name: float;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes float {
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(30px, -60px, 0) rotate(35deg); }
+    100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+/* individual ball sizes, positions, colors, durations and delays */
+.bg-balls .ball:nth-child(1){ width:140px; height:140px; left:8%;  top:10%;  background: var(--bmi-normal); animation-duration: 40s;  animation-delay: -10s; }
+.bg-balls .ball:nth-child(2){ width:100px; height:100px; left:25%; top:65%;  background: var(--bmi-underweight); animation-duration: 30s;  animation-delay: -4s; }
+.bg-balls .ball:nth-child(3){ width:60px;  height:60px;  left:52%; top:18%;  background: var(--bmi-overweight); animation-duration: 24s;  animation-delay: -8s; }
+.bg-balls .ball:nth-child(4){ width:40px;  height:40px;  left:75%; top:40%;  background: var(--bmi-obese-i); animation-duration: 28s;  animation-delay: -20s; }
+.bg-balls .ball:nth-child(5){ width:120px; height:120px; left:85%; top:8%;   background: var(--bmi-obese-ii); animation-duration: 50s;  animation-delay: -32s; }
+.bg-balls .ball:nth-child(6){ width:30px;  height:30px;  left:12%; top:48%;  background: var(--bmi-obese-i); animation-duration: 20s;  animation-delay: -6s; }
+.bg-balls .ball:nth-child(7){ width:90px;  height:90px;  left:40%; top:78%;  background: var(--bmi-normal); animation-duration: 34s;  animation-delay: -12s; }
+.bg-balls .ball:nth-child(8){ width:20px;  height:20px;  left:66%; top:68%;  background: var(--bmi-underweight); animation-duration: 16s;  animation-delay: -2s; }
+.bg-balls .ball:nth-child(9){ width:50px;  height:50px;  left:34%; top:30%;  background: var(--bmi-obese-ii); animation-duration: 26s;  animation-delay: -18s; }
+.bg-balls .ball:nth-child(10){width:70px;  height:70px;  left:92%; top:54%;  background: var(--bmi-obese-iii); animation-duration: 36s;  animation-delay: -24s; }
+
+/* reduce visibility on small screens */
+@media (max-width: 600px){
+    .bg-balls .ball{ opacity: 0.06; }
+}
+
+.innerbar{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width:265px;
+    height: 130px;
+    border: 2px solid var(--text-color);
+    background-color: whitesmoke;
+    border-top-left-radius: 180px;
+    border-top-right-radius: 180px;
+}
+
+.arrow-indicator{
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 100px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background-color: var(--muted);
+    margin-bottom: 30px;
+     transform-origin: 0px 100%;
+    transform: rotate(-90deg);
+}
+
+.arrow-indicator::after{
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+   
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid var(--muted);
+}
+.arrow-indicator::before{
+    content: "";
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--muted);
+}
+
+/* BMI result display */
+.bmi-result{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.bmi-result h3{
+    font-size: var(--fs-h3);
+    margin-bottom: 10px;
+}
+
+/* Health Tips styling: harmonious spacing and styled bullets */
+.health-tips{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem 1.5rem;
+    align-items: start;
+    margin-top: 0.5rem;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+#tips h2{
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+.tip-card{
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    line-height: var(--line-height);
+    border-bottom: 4px solid currentColor;
+}
+.tip-card h3{
+    margin: 0 0 0.5rem 0;
+    font-size: var(--fs-h4);
+    color: inherit;
+    font-weight: 700;
+}
+.health-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.health-list li{
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-size: var(--fs-base);
+}
+.health-list li::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.9;
+    transform: translateY(-50%);
+}
+/* Tip-specific accent colors */
+.tip-card.nutrition{ color: var(--bmi-normal); }
+.tip-card.hydration{ color: var(--bmi-underweight); }
+.tip-card.activity{ color: var(--bmi-overweight); }
+.tip-card.sleep{ color: var(--bmi-obese-i); }
+.tip-card.mental{ color: var(--bmi-obese-ii); }
+.tip-card.preventive{ color: var(--bmi-obese-iii); }
+
+#guidance{
+    margin: auto 20px;
+    margin-bottom:50px;
+}
+/* Keep spacing harmonious on small screens */
+@media (max-width: 600px){
+    .health-tips{ grid-template-columns: 1fr; gap: 0.75rem; }
+    .tip-card{ padding: 0.75rem; }
+}
+
+
+/* Guidance section styles */
+.guidance-note{ margin-bottom: 0.5rem; color: var(--muted); }
+.guidance-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+.guidance-card{
+    background: #fff;
+    padding: 0.85rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.guidance-card h4{ margin: 0 0 0.35rem 0; font-size: var(--fs-sm); }
+.guidance-card .range, .guidance-card .goal{ margin: 0 0 0.5rem 0; font-size: 0.95rem; color: #444; }
+.guidance-card ul{ margin: 0; padding-left: 1rem; color: #333; }
+.guidance-card.active{
+    outline: 3px solid rgba(86,180,100,0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* color accents for guidance cards */
+.guidance-card[data-category="Underweight"]{ border-left: 6px solid var(--bmi-underweight); }
+.guidance-card[data-category="Healthy Weight"]{ border-left: 6px solid var(--bmi-normal); }
+.guidance-card[data-category="Overweight"]{ border-left: 6px solid var(--bmi-overweight); }
+.guidance-card[data-category="Obese"]{ border-left: 6px solid var(--bmi-obese-iii); }
 
 
