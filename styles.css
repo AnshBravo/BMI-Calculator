@@ -124,6 +124,11 @@ a{
     padding: 1rem;
 }
 
+.navbar-menu a:hover {
+    color: var(--bmi-normal);
+    
+}
+
 /* Main Section Styles */
 .main-section {
     max-width: 600px;
@@ -279,6 +284,13 @@ a{
     box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
+#bmi-category{
+    margin-top: 10px;
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    color: var(--text-color);
+}
+
 .outerbar{
     display: inline-block;
     width:300px;
@@ -401,6 +413,10 @@ Background moving balls — Rules:
     .bg-balls .ball{ opacity: 0.06; }
 }
 
+.navbar-menu a{
+    padding: 0.6rem;
+}
+
 .innerbar{
     position: absolute;
     bottom: 0;
@@ -455,14 +471,20 @@ Background moving balls — Rules:
 }
 
 /* BMI result display */
+
+.bmi-result-container{
+    display: flex;
+}
 .bmi-result{
     text-align: center;
     margin-top: 20px;
+    padding-bottom: 10px;
 }
+
 
 .bmi-result h3{
     font-size: var(--fs-h3);
-    margin-bottom: 10px;
+    margin-bottom: 3px;
 }
 
 /* Health Tips styling: harmonious spacing and styled bullets */
@@ -567,4 +589,30 @@ Background moving balls — Rules:
 .guidance-card[data-category="Overweight"]{ border-left: 6px solid var(--bmi-overweight); }
 .guidance-card[data-category="Obese"]{ border-left: 6px solid var(--bmi-obese-iii); }
 
+/* Footer Styles */
+.footer{
+    background-color: #b62247;
+    color: #fff;
+    padding: 2rem 1rem;
+    position: relative;
+    margin-top: 50px;
+}
 
+.footer .desc{
+    max-width: 500px;
+    margin-bottom: 1rem;
+    margin-top:20px;
+}
+
+.footer-heading{
+    font-size: var(--fs-h4);
+    margin-bottom: 1rem;
+}
+
+.footer .footer-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
