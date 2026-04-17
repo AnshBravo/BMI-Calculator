@@ -44,17 +44,55 @@
 
         <section id="calculator" class="section">
             <h2>BMI Calculator</h2>
-            <form id="bmi-form">
-                <label for="weight">Weight (kg):</label>
-                <input type="text" id="weight" placeholder="Enter your weight(in Kg's)" min="0" required>
-                
-                <label for="height">Height (cm):</label>
-                <input type="text" id="height" placeholder="Enter your height(in cm's)" min="0" required>
+            <p class="calculator-subtitle">Switch units, calculate instantly, and track your recent results.</p>
+            <form id="bmi-form" novalidate>
+                <div class="unit-toggle" role="radiogroup" aria-label="Unit system">
+                    <label class="unit-option">
+                        <input type="radio" name="unit-system" value="metric" checked>
+                        <span>Metric (kg, cm)</span>
+                    </label>
+                    <label class="unit-option">
+                        <input type="radio" name="unit-system" value="imperial">
+                        <span>Imperial (lb, ft/in)</span>
+                    </label>
+                </div>
 
-                <button type="submit" id="calculate-btn">Calculate BMI</button>
+                <div class="input-grid" id="metric-inputs">
+                    <div class="field">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" placeholder="e.g. 68.5" min="1" step="0.1" required>
+                    </div>
+                    <div class="field">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" placeholder="e.g. 172" min="1" step="0.1" required>
+                    </div>
+                </div>
+
+                <div class="input-grid hidden" id="imperial-inputs">
+                    <div class="field">
+                        <label for="weight-lb">Weight (lb)</label>
+                        <input type="number" id="weight-lb" placeholder="e.g. 160" min="1" step="0.1">
+                    </div>
+                    <div class="field">
+                        <label for="height-ft">Height (ft)</label>
+                        <input type="number" id="height-ft" placeholder="e.g. 5" min="0" step="1">
+                    </div>
+                    <div class="field">
+                        <label for="height-in">Height (in)</label>
+                        <input type="number" id="height-in" placeholder="e.g. 8" min="0" max="11" step="1">
+                    </div>
+                </div>
+
+                <p id="form-error" class="form-error" aria-live="assertive"></p>
+
+                <div class="form-actions">
+                    <button type="submit" id="calculate-btn">Calculate BMI</button>
+                    <button type="button" id="reset-btn" class="secondary-btn">Reset</button>
+                </div>
             </form>
+
             <div class="bmi-result-container" id="bmi-result-container">
-                <div id="bmi-value-indicator" class="bmi-indicator">
+                <div id="bmi-value-indicator" class="bmi-indicator" aria-live="polite">
                     <span class="outerbar">
                         <span class="innerbar">
                             <span class="arrow-indicator"></span>
@@ -72,12 +110,35 @@
                     <div class="bmi-result">
                         <h3>Your BMI: <span id="bmi-value">--</span></h3>
                         <p id="bmi-category">Category: --</p>
-                        <p id="bmi-message">Your BMI is within a healthy range.</p>
+                        <p id="bmi-message">Enter your details to see personalized feedback.</p>
+                        <p id="bmi-target" class="bmi-target">Target guidance: --</p>
+                        <div class="result-metrics">
+                            <article class="metric-card">
+                                <span class="metric-label">BMI Prime</span>
+                                <strong id="bmi-prime">--</strong>
+                            </article>
+                            <article class="metric-card">
+                                <span class="metric-label">Healthy weight range</span>
+                                <strong id="healthy-range">--</strong>
+                            </article>
+                            <article class="metric-card">
+                                <span class="metric-label">Calculated</span>
+                                <strong id="calculated-at">--</strong>
+                            </article>
+                        </div>
                     </div>
+                </div>
+            </div>
 
+            <section class="history-panel" aria-label="Recent BMI calculations">
+                <div class="history-header">
+                    <h3>Recent Calculations</h3>
+                    <button type="button" id="clear-history-btn" class="text-btn">Clear history</button>
                 </div>
-                </div>
-            
+                <ul id="history-list" class="history-list">
+                    <li class="history-empty">No calculations yet.</li>
+                </ul>
+            </section>
         </section>
 
         <section id="guidance" class="section">
